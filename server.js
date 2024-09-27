@@ -6,6 +6,9 @@ const session = require('express-session');
 const exphbs = require('express-handlebars');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const dotenv = require('dotenv');
+const helmet = require('helmet'); // Optional for security
+const rateLimit = require('express-rate-limit'); // Optional for rate limiting
+const morgan = require('morgan'); // Optional for logging
 
 // Load environment variables from .env file
 dotenv.config();
@@ -41,6 +44,19 @@ const sess = {
 // Use session middleware
 app.use(session(sess));
 
+// Optional: Use Helmet for security
+app.use(helmet());
+
+// Optional: Use Morgan for logging
+app.use(morgan('dev'));
+
+// Optional: Set up rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
+
 // Set up Handlebars.js as the view engine
 const hbs = exphbs.create({
   // You can add custom helpers here if needed
@@ -65,6 +81,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Use routes defined in the controllers
 app.use(routes);
+
+// Optional: Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).render('500', { error: err.message });
+});
 
 // Catch-all route to render 404 page for undefined routes
 app.use((req, res) => {
