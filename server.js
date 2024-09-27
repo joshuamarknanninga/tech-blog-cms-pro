@@ -6,9 +6,9 @@ const session = require('express-session');
 const exphbs = require('express-handlebars');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const dotenv = require('dotenv');
-const helmet = require('helmet'); // Optional for security
-const rateLimit = require('express-rate-limit'); // Optional for rate limiting
-const morgan = require('morgan'); // Optional for logging
+// const helmet = require('helmet'); // Optional for security
+// const rateLimit = require('express-rate-limit'); // Optional for rate limiting
+// const morgan = require('morgan'); // Optional for logging
 
 // Load environment variables from .env file
 dotenv.config();
@@ -26,7 +26,7 @@ const PORT = process.env.PORT || 3001;
 
 // Set up session with Sequelize store
 const sess = {
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || 'default_secret', // Ensure SESSION_SECRET is set
   // Configure cookie to expire after 1 hour (adjust as needed)
   cookie: {
     maxAge: 60 * 60 * 1000, // 1 hour in milliseconds
@@ -57,9 +57,24 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+// Middleware to parse JSON and urlencoded form data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Middleware to inject session data into templates
+app.use((req, res, next) => {
+  res.locals.loggedIn = req.session.loggedIn;
+  res.locals.username = req.session.username;
+  next();
+});
+
 // Set up Handlebars.js as the view engine
 const hbs = exphbs.create({
-  // You can add custom helpers here if needed
+  // Specify partials directory
+  partialsDir: path.join(__dirname, 'views/partials'),
   helpers: {
     // Example helper to format date
     format_date: (date) => {
@@ -71,13 +86,6 @@ const hbs = exphbs.create({
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
-
-// Middleware to parse JSON and urlencoded form data
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Serve static files from the "public" directory
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Use routes defined in the controllers
 app.use(routes);
