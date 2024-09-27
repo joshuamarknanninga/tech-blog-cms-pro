@@ -1,6 +1,7 @@
 // models/Comment.js
+
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require('./index').sequelize;
+const sequelize = require('../config/connection'); // Updated path
 
 class Comment extends Model {}
 
@@ -15,6 +16,9 @@ Comment.init(
     contents: {
       type: DataTypes.TEXT,
       allowNull: false,
+      validate: {
+        len: [1], // At least 1 character
+      },
     },
     post_id: { // Foreign key
       type: DataTypes.INTEGER,
@@ -22,6 +26,7 @@ Comment.init(
         model: 'post',
         key: 'id',
       },
+      onDelete: 'CASCADE',
     },
     user_id: { // Foreign key
       type: DataTypes.INTEGER,
@@ -29,10 +34,11 @@ Comment.init(
         model: 'user',
         key: 'id',
       },
+      onDelete: 'CASCADE',
     },
   },
   {
-    sequelize,
+    sequelize, // Use the imported sequelize instance
     timestamps: true,
     freezeTableName: true,
     underscored: true,

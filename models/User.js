@@ -1,7 +1,8 @@
 // models/User.js
+
 const { Model, DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
-const sequelize = require('./index').sequelize;
+const sequelize = require('../config/connection'); // Updated path
 
 class User extends Model {
   // Method to check password
@@ -22,6 +23,9 @@ User.init(
       type: DataTypes.STRING,
       unique: true,
       allowNull: false,
+      validate: {
+        len: [3, 25], // Username length between 3 and 25 characters
+      },
     },
     password: {
       type: DataTypes.STRING,
@@ -45,7 +49,7 @@ User.init(
         return updatedUserData;
       },
     },
-    sequelize,
+    sequelize, // Use the imported sequelize instance
     timestamps: false,
     freezeTableName: true,
     underscored: true,

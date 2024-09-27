@@ -11,7 +11,8 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // Import Sequelize instance and models
-const { sequelize } = require('./models');
+const sequelize = require('./config/connection'); // Ensure this path is correct
+const { User, Post, Comment } = require('./models'); // Import models
 
 // Import routes
 const routes = require('./controllers');
