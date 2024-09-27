@@ -1,0 +1,11 @@
+{{> header}}
+<main>
+  <h1>Welcome to Tech Blog CMS</h1>
+  {{#each posts}}
+    <article>
+      <h2><a href="/post/{{this.id}}">{{this.title}}</a></h2>
+      <p>By {{this.user.username}} on {{this.createdAt}}</p>
+    </article>
+  {{/each}}
+</main>
+{{> footer}}

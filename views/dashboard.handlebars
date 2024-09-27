@@ -1,0 +1,34 @@
+{{> header}}
+<main>
+  <h2>Your Dashboard</h2>
+  <button id="new-post">Add New Post</button>
+
+  <section id="posts-list">
+    {{#each posts}}
+      <article>
+        <h3>{{this.title}}</h3>
+        <p>Created on {{this.createdAt}}</p>
+        <a href="#" class="edit-post" data-id="{{this.id}}">Edit</a>
+        <a href="#" class="delete-post" data-id="{{this.id}}">Delete</a>
+      </article>
+    {{/each}}
+  </section>
+</main>
+
+<!-- Modal for adding/editing posts -->
+<div id="post-modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2 id="modal-title">New Post</h2>
+    <form id="post-form">
+      <label for="post-title">Title:</label>
+      <input type="text" id="post-title" name="title" required>
+      
+      <label for="post-contents">Content:</label>
+      <textarea id="post-contents" name="contents" required></textarea>
+      
+      <button type="submit">Save</button>
+    </form>
+  </div>
+</div>
+{{> footer}}

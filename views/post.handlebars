@@ -1,0 +1,31 @@
+{{> header}}
+<main>
+  <article>
+    <h1>{{post.title}}</h1>
+    <p>By {{post.user.username}} on {{post.createdAt}}</p>
+    <div>{{post.contents}}</div>
+  </article>
+
+  <section>
+    <h2>Comments</h2>
+    {{#each post.comments}}
+      <div>
+        <p>{{this.user.username}} on {{this.createdAt}}</p>
+        <p>{{this.contents}}</p>
+      </div>
+    {{/each}}
+  </section>
+
+  {{#if loggedIn}}
+    <section>
+      <h3>Add a Comment</h3>
+      <form id="comment-form">
+        <textarea name="contents" id="comment-content" required></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+  {{else}}
+    <p>Please <a href="/login">log in</a> to add a comment.</p>
+  {{/if}}
+</main>
+{{> footer}}
