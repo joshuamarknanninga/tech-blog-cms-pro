@@ -1,12 +1,13 @@
 <header>
   <nav>
-    <a href="/">Home</a>
-    {{#if loggedIn}}
-      <a href="/dashboard">Dashboard</a>
-      <a href="#" id="logout">Logout ({{username}})</a>
-    {{else}}
-      <a href="/login">Login</a>
-      <a href="/signup">Sign Up</a>
-    {{/if}}
-  </nav>
+        <a href="/">Home</a>
+        {{#if loggedIn}}
+            <a href="/dashboard">Dashboard</a>
+            <a href="/add-post">Add Post</a> <!-- Ensure this link exists -->
+            <a href="/logout">Logout</a>
+        {{else}}
+            <a href="/login">Login</a>
+            <a href="/signup">Sign Up</a>
+        {{/if}}
+    </nav>
 </header>

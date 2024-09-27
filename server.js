@@ -6,9 +6,6 @@ const session = require('express-session');
 const exphbs = require('express-handlebars');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const dotenv = require('dotenv');
-// const helmet = require('helmet'); // Optional for security
-// const rateLimit = require('express-rate-limit'); // Optional for rate limiting
-// const morgan = require('morgan'); // Optional for logging
 
 // Load environment variables from .env file
 dotenv.config();
@@ -44,18 +41,6 @@ const sess = {
 // Use session middleware
 app.use(session(sess));
 
-// Optional: Use Helmet for security
-app.use(helmet());
-
-// Optional: Use Morgan for logging
-app.use(morgan('dev'));
-
-// Optional: Set up rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-});
-app.use(limiter);
 
 // Middleware to parse JSON and urlencoded form data
 app.use(express.json());
@@ -63,6 +48,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
+
+// // Session middleware
+// app.use(session(sess));
 
 // Middleware to inject session data into templates
 app.use((req, res, next) => {

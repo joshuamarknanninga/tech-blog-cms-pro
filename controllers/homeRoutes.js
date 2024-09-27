@@ -1,6 +1,7 @@
 // controllers/homeRoutes.js
 const router = require('express').Router();
 const { Post, User, Comment } = require('../models');
+const withAuth = require('../utils/auth');
 
 // Homepage route
 router.get('/', async (req, res) => {
@@ -49,6 +50,11 @@ router.get('/post/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
+});
+
+// GET /add-post - Render the Add Post page
+router.get('/add-post', withAuth, (req, res) => {
+  res.render('add-post', { loggedIn: req.session.loggedIn });
 });
 
 // Dashboard route
